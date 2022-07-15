@@ -1,6 +1,6 @@
 ![Drifto](https://uploads-ssl.webflow.com/62620d17539e43f8929e8001/626342c33db7194f75cde160_Drifto-p-500.png)
 
-# Drifto: Automatic Featurization :robot: for User Event Data :busts_in_silhouette: 
+# [Drifto](https://www.driftoml.com): Automatic Featurization :robot: for User Event Data :busts_in_silhouette: 
 
 User event data (clickstream, transactions, product interactions, etc.) is one of the highest volume and veracity data sources collected by organizations, but it is still notoriously hard to featurize event streams and generate data-driven insights or actionable models.
 
