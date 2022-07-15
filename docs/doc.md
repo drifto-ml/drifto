@@ -14,11 +14,11 @@ Finally, we have the `time_period`. This is time period over which Drifto should
 
 Once you specify the `join_field`, `time_field`, and some `event_tables` with some `cols`, you can let Drifto's automatic pipeline do the rest! Currently, Drifto's pipeline is comprised of only four API calls: `wrangle`, `featurize`, `train`, and `inference`.
 
- While Drifto is designed to be plug-and-play, you may desire a lower-grained control of the pipeline by setting a few flags or tuning a knob or two. If so, read on to the documentation to learn how to do that with Drifto's API calls.
+While Drifto is designed to be plug-and-play, you may desire finer-grained control of the pipeline by setting a few flags or tuning a knob or two. If so, read on to the documentation to learn how to do that with Drifto's API calls.
 
 ### Detailed Docs
 
-In a Python interpreter shell, if you `import drifto`, you can run `help(drifto.featurize)`,
+In a Python interpreter shell, if you `import drifto`, you can run `help(drifto.wrangle)`,
 `help(drifto.featurize)`, `help(drifto.train)`, and `help(drifto.inference)` to see detailed
 docs for each of our four API calls.
 
@@ -29,7 +29,7 @@ events for a hypothetical website. If the user encounters a buggy page ("/bug"),
 probability of making a purchase goes to zero for the following week.
 We aim to recover this fact from the raw event data.
 
-After installing Drifto, `cd` to the `examples` directory. Run `python gen_user_events.py 100 100 10`
+After installing Drifto, `cd` to the `examples` directory. Run `python gen_user_events.py -u 100 -w 100 -a 10`
 to generate data for 100 users with 10 events per week for 100 weeks. `events.parquet` stores basic
 user actions -- 'page\_viewed', 'email\_opened', and 'search\_performed' -- along with event-specific
 metadata, such as the particular page viewed for a 'page\_viewed' event. `transactions.parquet` stores

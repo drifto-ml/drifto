@@ -4,7 +4,7 @@
 
 User event data (clickstream, transactions, product interactions, etc.) is one of the highest volume and veracity data sources collected by organizations, but it is still notoriously hard to featurize event streams and generate data-driven insights or actionable models.
 
-Drifto is an automated feature engineering and machine learning tool. Drifto automatically generates a large number user-centric *autofeatures* over a specified time period. Drifto offers a nearly fully-automated *point-and-shoot* experience: just point Drifto towards your raw event tables! Drifto also provides a suite of machine learning models that automatically interoperate with your generated feature tables.
+Drifto is an automated feature engineering and machine learning tool. Drifto automatically generates a large number of user-centric *autofeatures* over a specified time period. Drifto offers a nearly fully-automated *point-and-shoot* experience: just point Drifto towards your raw event tables! Drifto also provides a suite of machine learning models that automatically interoperate with your generated feature tables.
 
 Drifto is built on [DuckDB](https://duckdb.org/) and [Apache Arrow](https://arrow.apache.org/docs/index.html), and therefore is scalable to large datasets. Contact us at `founders@driftoml.com` if you are interested in scaling Drifto up to the petabyte scale with a fully-managed cloud deployment. 
 

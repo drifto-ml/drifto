@@ -31,6 +31,7 @@ def train(
     """
     Run an training job on a given feature_table. Accepts metadata as returned
     by train.
+
     Parameters
     __________
     feature_table : pl.LightningModule or str

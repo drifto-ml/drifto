@@ -15,6 +15,7 @@ def inference(
     num_loading_workers=0):
     """
     Run an inference job on a given inference_table. Accepts metadata as returned by train.
+
     Parameters
     __________
     model : pl.LightningModule or str
