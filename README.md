@@ -25,7 +25,7 @@ Drifto is built on [DuckDB](https://duckdb.org/) and [Apache Arrow](https://arro
 
 ### Quick Start
 
-Install Drifto with `pip install .` from this directory.
+Install Drifto with `pip install drifto`.
 
 ### Example
 
