@@ -58,3 +58,30 @@ model, metadata = drifto.train(feature_table, metadata, max_epochs=80,
 
 predicts = drifto.inference(model, inference_table, metadata)
 ```
+
+`events.parquet` has the following schema:
+
+```
+user_id: int64
+timestamp: timestamp[ms]
+action: string
+attributes: string
+```
+
+where the `action column specifies the type of action taken and `attributes` is a
+JSON object with action-specific data like the particular page visited for a `page viewed`
+action.
+
+`transactions.parquet` has the following schema:
+
+```
+user_id: int64
+timestamp: timestamp[ms]
+order_total: int64
+```
+
+The merged event type produced by `wrangle` has the following schema:
+
+```
+
+```
