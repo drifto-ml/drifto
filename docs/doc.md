@@ -66,7 +66,7 @@ feature_table, inference_table, metadata = dr.featurize('action',
 The next call featurizes the merged event table. The same main columns are passed in, as well as the
 period to featurize on (`'week'`, which means that there will be a row of features for each week
 for each user), the target column (`'action'`), and the value in the target column whose count for
-the subsequent period to sum to get the target (`'purchase'`, meaning that the target is the total count of
+the subsequent period to use as the target (`'purchase'`, meaning that the target is the total count of
 purchase events for this user for the subsequent week). The `histogram_cols` are other categorical columns
 (the event type column, `'action'`, is treated this way by default) for which the count of each value should be
 turned into a feature (categorical columns not specified this way will simply have their mode and distinct count
