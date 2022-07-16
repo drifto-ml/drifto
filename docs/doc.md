@@ -35,7 +35,8 @@ user actions -- 'page\_viewed', 'email\_opened', and 'search\_performed' -- alon
 metadata, such as the particular page viewed for a 'page\_viewed' event. `transactions.parquet` stores
 all user purchases along with the total amount spent on the purchase.
 
-We now walk through the key code in `example.py`.
+We now walk through the key code in `example.py`. See the main [README](../README.md) for the schemas
+of the tables that come out of each API call.
 
 ```python
 import drifto as dr
