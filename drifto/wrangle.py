@@ -8,9 +8,9 @@ def wrangle(
     join_field,
     time_field,
     primary_table_path=None,
-    cols=[],
+    cols=None,
     event_col=None,
-    table_paths=[], # list of tuples (table name, path)
+    table_paths=None,
     start_time=None,
     end_time=None):
     """
@@ -30,7 +30,7 @@ def wrangle(
         a column (`event_col`) with the type of each event. If None, attempt to use the
         first path in `table_paths`.
 
-    cols : list of str, default []
+    cols : list of str, default None
         List of column names besides `join_field`, `time_field`, and `event_col` (for the
         primary table) to keep in the merged event table. Column names must be unique across
         the event tables.
@@ -39,7 +39,7 @@ def wrangle(
         Name of the column with the event type in the primary event table. If None, will take
         the first item in `cols`.
 
-    table_paths : list of tuple of str, str, default []
+    table_paths : list of tuple of str, str, default None
         List of tuples of (event type to give to all events in this table, path to Parquet
         file with event table).
 
@@ -53,6 +53,11 @@ def wrangle(
     _______
     Merged event table (pyarrow.Table).
     """
+
+    if cols == None:
+        cols = []
+    if table_paths == None:
+        table_paths = []
 
     # We require an event col
     assert event_col != None or len(cols) >= 1, "We require an event col"

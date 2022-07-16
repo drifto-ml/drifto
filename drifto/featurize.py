@@ -36,7 +36,7 @@ def featurize(
     target_value=None,
     events=None,
     histogram_top_k=50,
-    histogram_cols=[],
+    histogram_cols=None,
     top_k=10,
     drop_null=True,
     n_time_periods_per_row_for_features=1,
@@ -91,7 +91,7 @@ def featurize(
         For `event_col` column and `histogram_cols` columns with no explicit value list,
         the counts of the `histogram_top_k` most frequent values are turned into features.
 
-    histogram_cols : list of str or tuple, default []
+    histogram_cols : list of str or tuple, default None
         Names of columns whose value counts to turn into features. List item can also be a
         tuple with (column name, whitelist of values whose counts to turn into features)
         if the automatic behavior of using the `histogram_top_k` most frequent values is not
@@ -129,6 +129,9 @@ def featurize(
     contains the rows for the most recent time period in the event table, which can be used
     to make forward-looking predictions.
     """
+
+    if histogram_cols == None:
+        histogram_cols = []
 
     # Roll up important cols/fields into one tuple
     fields = (event_col, join_field, time_field)
