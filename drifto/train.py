@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 from torch.utils.data import random_split
 
 # Local imports
-from .ml.dataloaders import SupervisedDataset, _is_numeric
+from .ml.data import SupervisedDataset, _is_numeric
 from .ml.models import *
 
 def train(
@@ -101,8 +101,8 @@ def train(
     elif val_mode == "time":
         if type(val_split) == float:
             # Linear interpolate from first to last time period
-            max_t = pc.max(feature_table[metadata['time_col']]).as_py()
-            min_t = pc.min(feature_table[metadata['time_col']]).as_py()
+            max_t = pc.max(feature_table[metadata['time_field']]).as_py()
+            min_t = pc.min(feature_table[metadata['time_field']]).as_py()
             time_split_sql = str((1-val_split)*(max_t - min_t) + min_t)
         elif type(val_split) == datetime:
             time_split_sql = str(time_split_sql)
@@ -114,16 +114,17 @@ def train(
         train_table = con.execute(
             f"""
                 SELECT * FROM feature_table 
-                WHERE {metadata['time_col']} <= {time_split_sql}
+                WHERE {metadata['time_field']} <= '{time_split_sql}'
             """).arrow()
         val_table = con.execute(
             f"""
                 SELECT * FROM feature_table 
-                WHERE {metadata['time_col']} > {time_split_sql}
+                WHERE {metadata['time_field']} > '{time_split_sql}'
             """).arrow()
 
         D_train = SupervisedDataset(train_table, metadata, target, 
             embed_d_jk, embed_d_cats)
+        D = D_train # Still want this var for consistency with rest of code
 
         D_val = SupervisedDataset(val_table, metadata, target,
             embed_d_jk, embed_d_cats)

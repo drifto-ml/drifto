@@ -20,7 +20,9 @@ if __name__ == '__main__':
     pq.write_table(feature_table, "features.parquet")
 
     model, metadata = dr.train(feature_table, metadata, max_epochs=80,
-        model='logistic', model_export_path='test.onnx', lr=8e-3, 
+        model='logistic', model_export_path='test.onnx', lr=8e-3,
+        val_mode='time',
+        val_split=0.8, 
         batch_size=512)
 
     predicts = dr.inference(model, inference_table, metadata)

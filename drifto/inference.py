@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 
 # Local imports
-from .ml.dataloaders import SupervisedDataset
+from .ml.data import SupervisedDataset
 
 def inference(
     model,

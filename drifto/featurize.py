@@ -3,7 +3,7 @@ import pyarrow as pa
 import pyarrow.compute as pc
 
 # Local imports
-from .ml.dataloaders import _is_numeric
+from .ml.data import _is_numeric
 from .wrangle import _clean_name
 
 numeric_types = {
@@ -265,7 +265,7 @@ def _compute_metadata(feature_table, cols, con):
     metadata['fields'] = dict()
     metadata['event_col'] = cols[0]
     metadata['join_field'] = cols[1]
-    metadata['time_field'] = cols[2]
+    metadata['time_field'] = 'time_period'
     m = metadata['fields']
     for col in feature_table.schema:
         m[col.name] = {'dtype' : str(col.type)}
@@ -288,8 +288,11 @@ def _compute_labels(con, feature_table, join_field, label_col, label_values,
         col_names = map(lambda c: f"{c}_count", _gen_col_names(label_col, label_values))
     expr = ' + '.join(map(lambda c: ' + '.join([f"(LEAD({c}, {i}) OVER win)" \
         for i in range(1, n_time_periods_per_row_for_target + 1)]), col_names))
-    return con.execute(f"""SELECT {join_field}, time_period, {expr} AS label FROM feature_table WINDOW win AS
-                           (PARTITION BY {join_field} ORDER BY time_period ASC)
+    return con.execute(f"""
+                            SELECT {join_field}, time_period, {expr} AS label 
+                            FROM feature_table 
+                            WINDOW win AS
+                            (PARTITION BY {join_field} ORDER BY time_period ASC)
                         """).arrow()
 
 def _compute_features(con, event_table, join_field, time_field,

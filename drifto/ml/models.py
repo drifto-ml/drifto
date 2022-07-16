@@ -52,7 +52,7 @@ class LogisticRegression(LinearRegression):
 
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
-        loss = F.cross_entropy(self(x).squeeze(1), y)
+        loss = F.cross_entropy(self(x), y)
         self.log('train_loss', loss)
         return loss
 
