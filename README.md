@@ -58,3 +58,75 @@ model, metadata = drifto.train(feature_table, metadata, max_epochs=80,
 
 predicts = drifto.inference(model, inference_table, metadata)
 ```
+
+`events.parquet` has the following schema:
+
+```
+user_id: int64
+timestamp: timestamp[ms]
+action: string
+attributes: string
+```
+
+where the `action` column specifies the type of action taken and `attributes` is a
+JSON object with action-specific data like the particular page visited for a `page_visited`
+action.
+
+`transactions.parquet` has the following schema:
+
+```
+user_id: int64
+timestamp: timestamp[ms]
+order_total: int64
+```
+
+The merged event type produced by `wrangle` has the following schema:
+
+```
+timestamp: timestamp[ms]
+user_id: string
+action: string
+order_total: int64
+attributes_page: string
+```
+
+where `order_total` comes from the `transactions` table and `attributes_page` is extracted from the `attributes` JSON in `events.parquet` and is the particular page visited for a `page_visited` action (and `null` for other action types).
+
+Finally, the feature table has the following schema:
+
+```
+user_id: string
+time_period: timestamp[us]
+
+action_page_visited_count: int64
+action_page_visited_count_1: int64
+action_email_opened_count: int64
+action_email_opened_count_1: int64
+...
+attributes_page_payments_count: int64
+attributes_page_payments_count_1: int64
+...
+action_count_distinct: int64
+action_count_distinct_1: int64
+action_mode: string
+action_mode_1: string
+...
+attributes_page_count_distinct: int64
+attributes_page_count_distinct_1: int64
+...
+order_total_sum: double
+order_total_sum_1: double
+order_total_avg: double
+order_total_avg_1: double
+order_total_std: double
+order_total_std_1: double
+
+label: bool
+```
+
+where the first group of features counts the number of occurrences of each action type for each user for
+each time period. The features with `_1` affixed to the end are from the previous time period for the
+same user. The second set of features counts the number of occurrences of each particular viewed page
+for `page_viewed` events. The third and fourth sets of features are the standard ones computed for 
+all categorical columns. Finally, the last set of features show the standard ones computed for numerical
+columns.
