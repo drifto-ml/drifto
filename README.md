@@ -80,7 +80,7 @@ timestamp: timestamp[ms]
 order_total: int64
 ```
 
-The merged event type produced by `wrangle` has the following schema:
+The merged event table produced by `wrangle` has the following schema:
 
 ```
 timestamp: timestamp[ms]
