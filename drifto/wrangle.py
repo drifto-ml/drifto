@@ -26,7 +26,7 @@ def wrangle(
         Name of timestamp column, must be present in all event tables.
 
     primary_table_path : str, default None
-        Path to Parquet file with the primary event table, which must also contain
+        Path to Parquet file (can be local or s3://) with the primary event table, which must contain
         a column (`event_col`) with the type of each event. If None, attempt to use the
         first path in `table_paths`.
 
