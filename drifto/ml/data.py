@@ -49,8 +49,8 @@ class SupervisedDataset(Dataset):
         self.inference = inference
 
         for i,field in enumerate(self.m_fields):
-            #if field == self.target_column:
-            #    continue
+            if field == self.target_column:
+                continue
                 
             if _is_numeric(self.m_fields[field]['dtype']):
                 array = np.nan_to_num(self.table[field].to_numpy(),copy=False)

@@ -32,7 +32,10 @@ class LinearRegression(pl.LightningModule):
         return loss
 
     def validation_step(self, val_batch, batch_idx):
-        pass
+        x, y = val_batch
+        loss = F.mse_loss(self(x), y)
+        self.log('val_loss', loss)
+        return loss
 
     def predict_step(self, batch, batch_idx):
         x = batch
@@ -52,14 +55,28 @@ class LogisticRegression(LinearRegression):
 
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
-        loss = F.cross_entropy(self(x), y)
+        y_hat = self(x)
+        predict = torch.argmax(y_hat, dim=1)
+        acc = torch.sum((predict == y))/len(y)
+        loss = F.cross_entropy(y_hat, y)
         self.log('train_loss', loss)
+        self.log('train_acc', acc)
+        return loss
+
+    def validation_step(self, val_batch, batch_idx):
+        x, y = val_batch
+        y_hat = self(x)
+        predict = torch.argmax(y_hat, dim=1)
+        acc = torch.sum((predict == y))/len(y)
+        loss = F.cross_entropy(y_hat, y)
+        self.log('val_loss', loss)
+        self.log('val_acc', acc)
         return loss
 
 class NaiveBayes(pl.LightningModule):
     def __init__(self,
-        input_dim : list[int],
-        n_cats : list[int],
+        input_dim,
+        n_cats,
         n_classes: int):
         super().__init__()
         self.p = torch.zeros()
