@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='drifto',
-    version='0.1.2',
+    version='0.1.3',
     license='ELv2',
     description='Automatic featurization and ML for event analytics',
     author='Drifto Technologies Inc',
