@@ -111,9 +111,12 @@ class SupervisedDataset(Dataset):
                 self.target_dim = len(val2idx)
 
         self.dense_cols = torch.concat(self.dense_cols, dim=1)
-        self.offset_cols = torch.concat(self.offset_cols, dim=1)
+        if len(self.offset_cols) > 0:
+            self.offset_cols = torch.concat(self.offset_cols, dim=1)
+            self.offset_len = self.offset_cols.shape[1]
+        else:
+            self.offset_len = 0
         self.dense_len = self.dense_cols.shape[1]
-        self.offset_len = self.offset_cols.shape[1]
         self.fields = self.fields_dense + self.fields_offs 
 
     def _process_embs(self, field, ten, N, embed_d):
@@ -142,7 +145,9 @@ class SupervisedDataset(Dataset):
         return len(self.table)
 
     def __getitem__(self, idx):
-        x = (self.dense_cols[idx], self.offset_cols[idx])        
+        x = self.dense_cols[idx]
+        if len(self.offset_cols) > 0:
+            x = (x, self.offset_cols[idx])      
         rtn = x if self.inference else (x, self.target_col[idx])
         return rtn
 
