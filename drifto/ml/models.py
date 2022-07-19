@@ -68,6 +68,7 @@ class LogisticRegression(LinearRegression):
         x, y = val_batch
         y_hat = self(x)
         predict = torch.argmax(y_hat, dim=1)
+        self.log('avg_pred', torch.sum(predict)/len(predict))
         acc = torch.sum((predict == y))/len(y)
         loss = F.cross_entropy(y_hat, y)
         self.log('val_loss', loss)

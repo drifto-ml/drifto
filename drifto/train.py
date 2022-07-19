@@ -159,7 +159,8 @@ def train(
     new_metadata = dict()
     new_metadata['featurize'] = metadata
     new_metadata['train'] = {'embed_dim_join_field' : embed_d_jk,
-        'embed_dim_categoricals' : embed_d_cats, 'target_column' : target}
+        'embed_dim_categoricals' : embed_d_cats, 'target_column' : target,
+        'fields' : D.fields}
     metadata = new_metadata
 
     # Export model if requested
