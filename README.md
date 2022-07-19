@@ -10,7 +10,7 @@ Drifto is built on [DuckDB](https://duckdb.org/) and [Apache Arrow](https://arro
 
 ### Drifto Can Automatically :zap: : 
 - Join, merge, and wrangle disparate user event tables across all user touch points
-- Generate dozens, hundreds, or even thousands of high-quality *autofeatures* 
+- Generate dozens, hundreds, or even thousands of ML-ready *autofeatures* 
 - Train models on training features and run inference on production features
 - [soon] Schedule and manage your Drifto pipelines to keep tables and models updated
 - [soon] Track data lineage all the way from raw data to processed features to trained models.
