@@ -146,7 +146,7 @@ def wrangle(
         res = con.execute(f"SELECT {jq} FROM full_table").arrow()
         full_table = full_table.append_column(clean, res[0])
         distinct_types = con.execute(f"""SELECT DISTINCT {event_col} FROM full_table
-                                         WHERE {clean} != NULL""").arrow()[0]
+                                         WHERE {clean} IS NOT NULL""").arrow()[0]
         if len(distinct_types) > 1:
             for typ in distinct_types:
                 augmented_name = _clean_name(str(typ)) + '_' + clean
