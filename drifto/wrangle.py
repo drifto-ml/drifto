@@ -148,7 +148,7 @@ def wrangle(
         distinct_types = con.execute(f"""
                                         SELECT DISTINCT {event_col} 
                                         FROM full_table
-                                        WHERE {clean} != NULL
+                                        WHERE {clean} IS NOT NULL
                                     """).arrow()[0]
         if len(distinct_types) > 1:
             for typ in distinct_types:
