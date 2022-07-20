@@ -175,6 +175,15 @@ def featurize(
             p_vals = _process_top_k(histogram_top_k if col == event_col else top_k,
                 col, wrangled_table, con)
             vals = [str(val) for val in p_vals[col] if val.as_py() != None]
+            final_vals = []
+            seen_clean_vals = set()
+            # eliminate cleaned duplicates
+            for v in vals:
+                cv = _clean_name(v)
+                if cv not in seen_clean_vals:
+                    seen_clean_vals.add(cv)
+                    final_vals.append(v)
+            vals = final_vals
         heavy_cat_cols.append((col, vals))
 
     # Core feature computation routine 
