@@ -383,8 +383,10 @@ def _process_top_k(top_k, field, _table, con):
 
 def _process_cat_value_filter(top_k_vals, field, _table, con):
     top_k_vals_sql = ""
+    subs = []
     for i,val in enumerate(top_k_vals):
-        top_k_vals_sql += f"{field} = '{val}' "
+        top_k_vals_sql += f"{field} = ? "
+        subs.append(val)
         if i < len(top_k_vals) - 1:
             top_k_vals_sql += "OR "
 
@@ -398,4 +400,4 @@ def _process_cat_value_filter(top_k_vals, field, _table, con):
             SELECT CASE 
             WHEN {top_k_vals_sql} THEN {field} ELSE {other_sql} END
             AS {field} FROM _table;
-        """).arrow()
+        """, subs).arrow()
