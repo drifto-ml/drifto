@@ -17,9 +17,11 @@ class LinearRegression(pl.LightningModule):
         self.lr = lr
 
     def forward(self, x):
-        if type(x) == tuple:
+        if len(x) > 1:
             x_dense, x_offs = x
             x = torch.concat((x_dense, self.E(x_offs).squeeze(1)),dim=1)
+        else:
+            x = x[0]
         return self.weights(x)
 
     def configure_optimizers(self):
