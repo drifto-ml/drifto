@@ -349,11 +349,11 @@ def _create_dummy_events(con, event_table, join_field, time_field,
                          """).arrow()
     iters = pa.table({'iter': pa.array([i for i in range(num_time_periods)])})
     if feature_time_period == 'day':
-        interval = "iter day"
+        interval = "(iter) day"
     elif feature_time_period == 'week':
         interval = "(7 * iter) day"
     else: # 'month'
-        interval = "iter month"
+        interval = "(iter) month"
     dates = con.execute(f"""SELECT CAST(date_trunc('{feature_time_period}', DATE '{start_day}') +
                             INTERVAL {interval} AS timestamp) AS {time_field} FROM iters
                          """).arrow()
