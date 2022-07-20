@@ -179,7 +179,8 @@ def featurize(
             seen_clean_vals = set()
             # eliminate cleaned duplicates
             for v in vals:
-                cv = _clean_name(v)
+                # lower case so that case-insensitive SQL column names are distinct
+                cv = _clean_name(v).lower()
                 if cv not in seen_clean_vals:
                     seen_clean_vals.add(cv)
                     final_vals.append(v)
