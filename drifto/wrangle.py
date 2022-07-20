@@ -30,10 +30,14 @@ def wrangle(
         a column (`event_col`) with the type of each event. If None, attempt to use the
         first path in `table_paths`.
 
-    cols : list of str, default None
+    cols : list of str or tuple of str, str, default None
         List of column names besides `join_field`, `time_field`, and `event_col` (for the
         primary table) to keep in the merged event table. Column names must be unique across
-        the event tables.
+        the event tables. DuckDB JSON selectors are allowed, and JSON selectors can be
+        passed as a tuple with the second item a string indicating the DuckDB type to
+        cast the selected value to. If a cast is specified, the original selected value
+        is assumed to be of type string. If JSON selected columns appear in multiple
+        different event types, a separate column is created for each event type.
 
     event_col : str, default None
         Name of the column with the event type in the primary event table. If None, will take
@@ -95,7 +99,8 @@ def wrangle(
     # Try to find additional cols
     print("Drifto.Wrangle: Processing columns...") 
     for column in cols:
-        col = column.split('->')
+        col = column[0] if type(column) == tuple else column
+        col = col.split('->')
         found = False
         for i, js in enumerate(join_schemas):
             if col[0] in js.names:
@@ -142,9 +147,28 @@ def wrangle(
     con = duckdb.connect(database=':memory:')
     print("Drifto.Wrangle: Finalizing feature table...")
     for jq in json_queries:
-        clean = _clean_name(jq)
-        res = con.execute(f"SELECT {jq} FROM full_table").arrow()
+        query = jq[0] if type(jq) == tuple else jq
+        clean = _clean_name(query)
+        if type(jq) == tuple:
+            query = f"CAST(TRIM({query}, '\"') as {jq[1]})"
+        res = con.execute(f"SELECT {query} FROM full_table").arrow()
         full_table = full_table.append_column(clean, res[0])
+        distinct_types = con.execute(f"""
+                                        SELECT DISTINCT {event_col} 
+                                        FROM full_table
+                                        WHERE {clean} IS NOT NULL
+                                    """).arrow()[0]
+        if len(distinct_types) > 1:
+            for typ in distinct_types:
+                augmented_name = _clean_name(str(typ)) + '_' + clean
+                new_col = con.execute(f"""
+                                        SELECT CASE 
+                                        WHEN {event_col} = '{str(typ)}'
+                                        THEN {clean} ELSE NULL END 
+                                        FROM full_table
+                                    """).arrow()[0]
+                full_table = full_table.append_column(augmented_name, new_col)
+            full_table = full_table.drop([clean])
     full_table = full_table.drop(list(json_cols_to_remove))
 
     print("Drifto.Wrangle: Done!")
