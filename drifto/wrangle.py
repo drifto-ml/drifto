@@ -145,13 +145,20 @@ def wrangle(
         clean = _clean_name(jq)
         res = con.execute(f"SELECT {jq} FROM full_table").arrow()
         full_table = full_table.append_column(clean, res[0])
-        distinct_types = con.execute(f"""SELECT DISTINCT {event_col} FROM full_table
-                                         WHERE {clean} != NULL""").arrow()[0]
+        distinct_types = con.execute(f"""
+                                        SELECT DISTINCT {event_col} 
+                                        FROM full_table
+                                        WHERE {clean} != NULL
+                                    """).arrow()[0]
         if len(distinct_types) > 1:
             for typ in distinct_types:
                 augmented_name = _clean_name(str(typ)) + '_' + clean
-                new_col = con.execute(f"""SELECT CASE WHEN {event_col} = '{str(typ)}'
-                                          THEN {clean} ELSE NULL END FROM full_table""").arrow()[0]
+                new_col = con.execute(f"""
+                                        SELECT CASE 
+                                        WHEN {event_col} = '{str(typ)}'
+                                        THEN {clean} ELSE NULL END 
+                                        FROM full_table
+                                    """).arrow()[0]
                 full_table = full_table.append_column(augmented_name, new_col)
             full_table = full_table.drop([clean])
     full_table = full_table.drop(list(json_cols_to_remove))
